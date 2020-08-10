@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Marathon</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li th:classappend="${#request.requestURI == '/' ? 'active':''}" class="nav-item">
+                <a class="nav-link" th:href="${'/index'}">Home</a>
+            </li>
+            <li th:classappend="${#request.requestURI.startsWith('/marathons') ? 'active':''}" class="nav-item">
+                <a class="nav-link" th:href="${'/marathons'}">Marathons</a>
+            </li>
+            <li sec:authorize="hasAnyRole('MENTOR','ADMIN')"
+                th:classappend="${#request.requestURI.startsWith('/students') ? 'active':''}" class="nav-item">
+                <a class="nav-link" th:href="${'/students'}">Students</a>
+            </li>
+        </ul>
+        <div class="my-2 my-lg-0">
+            <a sec:authorize="isAnonymous()" th:href="${'/form-login'}" class="btn btn-outline-primary my-2 my-sm-0" type="submit">Log In</a>
+            <a sec:authorize="isAnonymous()" th:href="${'/registration'}" class="btn btn-outline-primary my-2 my-sm-0" type="submit">Register</a>
+            <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="form-inline">
+                <div class="auth-email" th:text="${#authentication.principal.username}"></div>
+                <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Log Out</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+</body>
+
+</html>
