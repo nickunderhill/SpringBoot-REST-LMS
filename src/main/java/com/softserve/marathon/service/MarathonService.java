@@ -17,4 +17,6 @@ public interface MarathonService {
     Marathon getMarathonById(Long id) throws EntityNotFoundException;
 
     void deleteMarathonById(Long id);
+
+    boolean existsMarathonByID(Long id);
 }
