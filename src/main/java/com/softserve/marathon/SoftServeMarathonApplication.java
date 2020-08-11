@@ -20,8 +20,8 @@ public class  SoftServeMarathonApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (roleRepository.findByRole("MENTOR") == null) roleRepository.save(new Role("MENTOR"));
-        if (roleRepository.findByRole("STUDENT") == null) roleRepository.save(new Role("STUDENT"));
-        if (roleRepository.findByRole("ADMIN") == null) roleRepository.save(new Role("ADMIN"));
+        if (roleRepository.findByRole("ROLE_MENTOR") == null) roleRepository.save(new Role("ROLE_MENTOR"));
+        if (roleRepository.findByRole("ROLE_STUDENT") == null) roleRepository.save(new Role("ROLE_STUDENT"));
+        if (roleRepository.findByRole("ROLE_ADMIN") == null) roleRepository.save(new Role("ROLE_ADMIN"));
     }
 }

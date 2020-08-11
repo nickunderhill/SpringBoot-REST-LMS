@@ -12,8 +12,6 @@ public interface MarathonService {
 
     List<Marathon> getAll();
 
-    //For student role
-    @PreAuthorize("hasRole('STUDENT')")
     List<Marathon> getAllByStudentId(Long studentId);
 
     Marathon getMarathonById(Long id) throws EntityNotFoundException;
