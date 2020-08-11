@@ -33,7 +33,7 @@ public class MarathonServiceImpl implements MarathonService {
 
     //For admin, mentor roles
     @Override
-    @PreAuthorize("hasAnyRole('ADMIN','MENTOR')")
+//    @PreAuthorize("hasAnyRole('ADMIN','MENTOR')")
     public List<Marathon> getAll() {
         logger.info("show getAll() method");
         List<Marathon> marathons = marathonRepository.findAll();

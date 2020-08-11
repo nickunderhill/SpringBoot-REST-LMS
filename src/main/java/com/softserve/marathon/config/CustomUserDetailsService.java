@@ -1,4 +1,4 @@
-package com.softserve.marathon.service.imp;
+package com.softserve.marathon.config;
 
 import com.softserve.marathon.model.User;
 import com.softserve.marathon.repository.UserRepository;
@@ -20,13 +20,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public CustomUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.getUserByEmail(email);
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-                getAuthorities(user));
-    }
-
-    private static Collection<? extends GrantedAuthority> getAuthorities(User user) {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_"+user.getRole().getRole()));
+        return CustomUserDetails.fromUserEntityToCustomUserDetails(user);
     }
 }

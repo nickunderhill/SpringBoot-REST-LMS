@@ -4,6 +4,6 @@
 
 **Sprint:** 18
 
-**Students:** [Mykola Podopryhora](https://github.com/nickunderhill), [Vitalii Dombrovskyi](https://github.com/)
+**Students:** [Mykola Podopryhora](https://github.com/nickunderhill), [Vitalii Dombrovskyi](https://github.com/vitaldom/)
 
 **Original repository:** [link](https://github.com/nickunderhill/JOM-Sprint18)
