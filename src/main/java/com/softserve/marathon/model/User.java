@@ -46,10 +46,13 @@ public class User {
 //    private Role role;
     @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
     @JoinColumn(name = "id_role")
+    @JsonIgnore
     private Role role;
 
     @Transient
+    @JsonIgnore
     private String confirmPassword;
+    @JsonIgnore
     private boolean active;
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)

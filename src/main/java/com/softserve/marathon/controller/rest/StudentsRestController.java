@@ -58,7 +58,7 @@ public class StudentsRestController {
         }
         student.setRole(roleRepository.findByRole("ROLE_STUDENT"));
         userService.createOrUpdateUser(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body(String.format("New student created"));
+        return ResponseEntity.status(HttpStatus.CREATED).body("New student created");
     }
 
     @PutMapping("/{studentId}")

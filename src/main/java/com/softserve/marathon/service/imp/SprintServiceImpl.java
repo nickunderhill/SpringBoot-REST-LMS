@@ -76,7 +76,7 @@ public class SprintServiceImpl implements SprintService {
     }
 
     @Override
-    public void createSpring(Sprint sprint) {
+    public void createSprint(Sprint sprint) {
         sprint.setStartDay(LocalDate.now());
         sprintRepository.save(sprint);
     }

@@ -1,8 +1,5 @@
 package com.softserve.marathon.dto;
 
-/**
- * @author Mykola Podopryhora
- */
 public class UserResponse {
 
     private String login;

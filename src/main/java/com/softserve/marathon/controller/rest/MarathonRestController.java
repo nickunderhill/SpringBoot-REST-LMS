@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/marathons")
 public class MarathonRestController {
     Logger logger = LoggerFactory.getLogger(MarathonRestController.class);
 
@@ -30,8 +30,8 @@ public class MarathonRestController {
 
     }
 
-    @GetMapping("/marathons")
-    public List<Marathon> showMarathons(Model model, HttpServletRequest request) {
+    @GetMapping
+    public List<Marathon> showMarathons(Model model) {
         logger.info("** GET /api/marathons");
         List<Marathon> marathons = marathonService.getAll();
         model.addAttribute("marathons", marathons);
@@ -39,7 +39,7 @@ public class MarathonRestController {
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_MENTOR"})
-    @PostMapping("/marathons")
+    @PostMapping
     public ResponseEntity<String> createMarathon(@RequestBody String marathonAsJsonString) throws JsonProcessingException {
         logger.info("** POST /api/marathons");
         Marathon newMarathon = mapper.readValue(marathonAsJsonString, Marathon.class);
@@ -51,7 +51,7 @@ public class MarathonRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(String.format("New marathon \"%s\" created.", newMarathon.getTitle()));
     }
 
-    @GetMapping(path = "/marathons/{id}")
+    @GetMapping(path = "/{id}")
     public ResponseEntity<String> getMarathon(@PathVariable("id") Long id) throws JsonProcessingException {
         logger.info("** GET /api/marathons/" + id);
         if (!marathonService.existsMarathonByID(id)) {
@@ -63,7 +63,7 @@ public class MarathonRestController {
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_MENTOR"})
-    @PutMapping(path = "/marathons/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<String> updateMarathon(@PathVariable("id") Long id,
                                                  @RequestBody String marathonAsJsonString) throws JsonProcessingException {
         logger.info("** PUT /api/marathons/" + id);
@@ -78,7 +78,7 @@ public class MarathonRestController {
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_MENTOR"})
-    @DeleteMapping(path = "/marathons/{id}")
+    @DeleteMapping(path = "/{id}")
     public ResponseEntity<String> deleteMarathon(@PathVariable Long id) {
         logger.info("** DELETE /api/marathons/" + id);
         if (!marathonService.existsMarathonByID(id)) {

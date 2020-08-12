@@ -76,6 +76,5 @@ public class SecurityConfig {
                     .logoutSuccessUrl("/form-login")
                     .deleteCookies("JSESSIONID");
         }
-
     }
 }
