@@ -13,4 +13,6 @@ public interface MarathonRepository extends JpaRepository<Marathon, Long> {
             "JOIN MARATHON_USER MU ON MU.ID_MARATHON  = M.ID \n" +
             "WHERE MU.ID_USER = ?1", nativeQuery = true)
     List<Marathon> findAllByUserId(Long id);
+
+    Boolean existsByTitle(String name);
 }

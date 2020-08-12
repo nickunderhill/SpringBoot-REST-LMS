@@ -82,10 +82,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public boolean userExists(Long id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
+    @Transactional
+    public boolean userExistsEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    @Transactional
     public boolean createOrUpdateUser(User entity) {
-        entity.setActive(true);
-        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-        entity.setRole(roleRepository.findByRole("STUDENT"));
         if (entity.getId() != null) {
             Optional<User> user = userRepository.findById(entity.getId());
             if (user.isPresent()) {
@@ -93,12 +102,14 @@ public class UserServiceImpl implements UserService {
                 updateUser.setEmail(entity.getEmail());
                 updateUser.setFirstName(entity.getFirstName());
                 updateUser.setLastName(entity.getLastName());
-                updateUser.setRole(entity.getRole());
-                updateUser.setPassword(entity.getPassword());
+                updateUser.setPassword(passwordEncoder.encode(entity.getPassword()));
                 userRepository.save(updateUser);
                 return false;
             }
         }
+        entity.setActive(true);
+        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+        entity.setRole(roleRepository.findByRole("ROLE_STUDENT"));
         userRepository.save(entity);
         return true;
     }

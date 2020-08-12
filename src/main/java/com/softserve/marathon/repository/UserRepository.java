@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -19,6 +20,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "JOIN MARATHON_USER MU ON MU.ID_USER  = U.ID \n" +
             "WHERE MU.ID_MARATHON = ?1", nativeQuery = true)
     List<User> getAllByMarathon(Long id);
+
+    Boolean existsByEmail(String email);
 
 
 }
