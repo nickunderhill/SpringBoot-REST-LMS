@@ -1,5 +1,8 @@
 package com.softserve.marathon.service.imp;
 
+import com.softserve.marathon.config.CustomUserDetails;
+import com.softserve.marathon.dto.UserRequest;
+import com.softserve.marathon.dto.UserResponse;
 import com.softserve.marathon.exception.EntityNotFoundException;
 import com.softserve.marathon.model.*;
 import com.softserve.marathon.repository.MarathonRepository;
@@ -8,11 +11,15 @@ import com.softserve.marathon.repository.RoleRepository;
 import com.softserve.marathon.repository.UserRepository;
 import com.softserve.marathon.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,6 +101,39 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.save(entity);
         return true;
+    }
+
+    @Override
+    public boolean saveUser(UserRequest userRequest) {
+        User user = new User();
+        user.setRole(roleRepository.findByRole("ROLE_STUDENT"));
+        user.setFirstName("API");
+        user.setLastName("User");
+        user.setEmail(userRequest.getLogin());
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        return (userRepository.save(user) != null);
+    }
+
+    @Override
+    public UserResponse findByLoginAndPassword(UserRequest userRequest) {
+        UserResponse result = null;
+        User user = userRepository.getUserByEmail(userRequest.getLogin());
+        if ((user != null)
+                && (passwordEncoder.matches(userRequest.getPassword(),
+                user.getPassword()))) {
+            result = new UserResponse();
+            result.setLogin(userRequest.getLogin());
+            result.setRoleName(user.getRole().getRole());
+        }
+        return result;
+    }
+
+    @Override
+    public String getExpirationLocalDate() {
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        LocalDateTime localDate = customUserDetails.getExpirationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy 'at' hh:mm");
+        return localDate.format(formatter);
     }
 
     @Override

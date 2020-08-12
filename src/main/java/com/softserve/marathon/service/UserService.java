@@ -1,5 +1,7 @@
 package com.softserve.marathon.service;
 
+import com.softserve.marathon.dto.UserRequest;
+import com.softserve.marathon.dto.UserResponse;
 import com.softserve.marathon.model.Marathon;
 import com.softserve.marathon.model.Role;
 import com.softserve.marathon.model.Task;
@@ -17,6 +19,13 @@ public interface UserService {
     User getUserByEmail(String email);
 
     boolean createOrUpdateUser(User user);
+
+    // for MarathonRestController
+    boolean saveUser(UserRequest userRequest);
+
+    UserResponse findByLoginAndPassword(UserRequest userRequest);
+
+    String getExpirationLocalDate();
 
     List<User> getAllByRole(Role role);
 

@@ -93,4 +93,9 @@ public class MarathonServiceImpl implements MarathonService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public boolean existsMarathonByID(Long id) {
+        return marathonRepository.existsById(id);   //TODO consider using this instead of Optional in other methods
+    }
 }
