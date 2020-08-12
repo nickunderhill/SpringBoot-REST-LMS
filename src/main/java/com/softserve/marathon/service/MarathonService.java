@@ -19,4 +19,6 @@ public interface MarathonService {
     void deleteMarathonById(Long id);
 
     boolean existsMarathonByID(Long id);
+
+    boolean existsMarathonByName(String name);
 }

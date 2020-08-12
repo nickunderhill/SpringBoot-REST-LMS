@@ -7,6 +7,7 @@ import com.softserve.marathon.model.Role;
 import com.softserve.marathon.model.Task;
 import com.softserve.marathon.model.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface UserService {
@@ -17,6 +18,12 @@ public interface UserService {
     User getUserById(Long id);
 
     User getUserByEmail(String email);
+
+    @Transactional
+    boolean userExists(Long id);
+
+    @Transactional
+    boolean userExistsEmail(String email);
 
     boolean createOrUpdateUser(User user);
 

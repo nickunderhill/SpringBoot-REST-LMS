@@ -36,7 +36,7 @@ public class StudentController {
     @Secured({"ROLE_ADMIN","ROLE_MENTOR"})
     @GetMapping("")
     public String studentsList(Model model) {
-        logger.info("Rendering student/create.html view");
+        logger.info("Rendering student/list.html view");
         model.addAttribute("students", userService.getAllByRole(roleRepository.findByRole("STUDENT")));
         return "student/list";
     }
@@ -109,7 +109,7 @@ public class StudentController {
             return "student/create";
         }
         logger.info("Creating new student for marathon " + marathonId);
-        student.setRole(roleRepository.findByRole("STUDENT"));
+        student.setRole(roleRepository.findByRole("ROLE_STUDENT"));
         try {
             /*User newStudent = */userService.createOrUpdateUser(student);
             Marathon marathon = marathonService.getMarathonById(marathonId);

@@ -96,6 +96,11 @@ public class MarathonServiceImpl implements MarathonService {
 
     @Override
     public boolean existsMarathonByID(Long id) {
-        return marathonRepository.existsById(id);   //TODO consider using this instead of Optional in other methods
+        return marathonRepository.existsById(id);
+    }
+
+    @Override
+    public boolean existsMarathonByName(String name) {
+        return marathonRepository.existsByTitle(name);
     }
 }

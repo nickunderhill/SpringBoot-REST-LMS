@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,35 +22,38 @@ public class MarathonRestController {
     Logger logger = LoggerFactory.getLogger(MarathonRestController.class);
 
     private final MarathonService marathonService;
-    private final UserRepository userRepository;
     private final ObjectMapper mapper;
 
     public MarathonRestController(MarathonService marathonService, UserRepository userRepository, ObjectMapper mapper) {
         this.marathonService = marathonService;
-        this.userRepository = userRepository;
         this.mapper = mapper;
 
     }
 
-    //Marathon List
     @GetMapping("/marathons")
     public List<Marathon> showMarathons(Model model, HttpServletRequest request) {
+        logger.info("** GET /api/marathons");
         List<Marathon> marathons = marathonService.getAll();
         model.addAttribute("marathons", marathons);
         return marathons;
     }
 
-    //Create Marathon
-    @PostMapping("/marathons/add")
-    public Marathon createMarathon(String name) {
-        logger.info("creating new marathon " + name);
-        Marathon newMarathon = new Marathon();
-        newMarathon.setTitle(name);
-        return marathonService.createOrUpdateMarathon(newMarathon);
+    @Secured({"ROLE_ADMIN", "ROLE_MENTOR"})
+    @PostMapping("/marathons")
+    public ResponseEntity<String> createMarathon(@RequestBody String marathonAsJsonString) throws JsonProcessingException {
+        logger.info("** POST /api/marathons");
+        Marathon newMarathon = mapper.readValue(marathonAsJsonString, Marathon.class);
+        if (marathonService.existsMarathonByName(newMarathon.getTitle())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(String.format("Marathon with name \"%s\" already exists.", newMarathon.getTitle()));
+        }
+        marathonService.createOrUpdateMarathon(newMarathon);
+        return ResponseEntity.status(HttpStatus.CREATED).body(String.format("New marathon \"%s\" created.", newMarathon.getTitle()));
     }
 
     @GetMapping(path = "/marathons/{id}")
     public ResponseEntity<String> getMarathon(@PathVariable("id") Long id) throws JsonProcessingException {
+        logger.info("** GET /api/marathons/" + id);
         if (!marathonService.existsMarathonByID(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(String.format("Marathon with ID %s does not exist", id));
@@ -58,29 +62,29 @@ public class MarathonRestController {
                 (id)));
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_MENTOR"})
     @PutMapping(path = "/marathons/{id}")
     public ResponseEntity<String> updateMarathon(@PathVariable("id") Long id,
                                                  @RequestBody String marathonAsJsonString) throws JsonProcessingException {
+        logger.info("** PUT /api/marathons/" + id);
         if (!marathonService.existsMarathonByID(id)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(String.format("Marathon with ID %s does not exist", id));
         }
-
         Marathon marathon = mapper.readValue(marathonAsJsonString, Marathon.class);
+        marathon.setId(id);
         marathonService.createOrUpdateMarathon(marathon);
         return ResponseEntity.ok(String.format("Marathon with ID %s updated", id));
     }
 
-    @PostMapping(path = "/marathons")
-    public ResponseEntity<String> updateMarathon(@RequestBody String marathonAsJsonString)
-            throws JsonProcessingException {
-        Marathon marathon = mapper.readValue(marathonAsJsonString, Marathon.class);
-        marathonService.createOrUpdateMarathon(marathon);
-        return ResponseEntity.ok("New marathon created");
-    }
-
+    @Secured({"ROLE_ADMIN", "ROLE_MENTOR"})
     @DeleteMapping(path = "/marathons/{id}")
-    public ResponseEntity<String> deleteMarathon(@PathVariable("id") Long id) {
+    public ResponseEntity<String> deleteMarathon(@PathVariable Long id) {
+        logger.info("** DELETE /api/marathons/" + id);
+        if (!marathonService.existsMarathonByID(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(String.format("Marathon with ID %s does not exist", id));
+        }
         marathonService.deleteMarathonById(id);
         return ResponseEntity.ok(String.format("Marathon with ID %s deleted", id));
     }

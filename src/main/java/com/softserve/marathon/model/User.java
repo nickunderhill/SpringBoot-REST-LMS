@@ -1,5 +1,7 @@
 package com.softserve.marathon.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -51,6 +53,7 @@ public class User {
     private boolean active;
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Marathon> marathons = new ArrayList<>();
 
     public List<Progress> getProgresses() {
