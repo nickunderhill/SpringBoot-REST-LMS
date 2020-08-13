@@ -22,19 +22,27 @@ public class MarathonRestController {
     Logger logger = LoggerFactory.getLogger(MarathonRestController.class);
 
     private final MarathonService marathonService;
+    private final UserRepository userRepository;
     private final ObjectMapper mapper;
 
     public MarathonRestController(MarathonService marathonService, UserRepository userRepository, ObjectMapper mapper) {
         this.marathonService = marathonService;
+        this.userRepository = userRepository;
         this.mapper = mapper;
 
     }
 
     @GetMapping
-    public List<Marathon> showMarathons(Model model) {
+    public List<Marathon> showMarathons(HttpServletRequest request) {
         logger.info("** GET /api/marathons");
-        List<Marathon> marathons = marathonService.getAll();
-        model.addAttribute("marathons", marathons);
+        List<Marathon> marathons;
+        String login = request.getUserPrincipal().getName();
+        Long studentId = userRepository.getUserByEmail(login).getId();
+        if (request.isUserInRole("ROLE_STUDENT")) {
+            marathons = marathonService.getAllByStudentId(studentId);
+        } else {
+            marathons = marathonService.getAll();
+        }
         return marathons;
     }
 

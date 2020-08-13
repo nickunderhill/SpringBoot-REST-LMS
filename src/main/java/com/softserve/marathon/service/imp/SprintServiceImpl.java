@@ -64,15 +64,11 @@ public class SprintServiceImpl implements SprintService {
 
     @Override
     public boolean updateSprint(Sprint sprint) {
-        boolean updated = false;
-        if (sprint.getId() != null) {
-            Sprint sprintFromDb = sprintRepository.getOne(sprint.getId());
-            if (!sprintFromDb.equals(sprint)) {
-                sprintRepository.save(sprint);
-                updated = true;
-            }
+        if (!sprintRepository.existsById(sprint.getId())) {
+            return false;
         }
-        return updated;
+        sprintRepository.save(sprint);
+        return true;
     }
 
     @Override
@@ -95,5 +91,10 @@ public class SprintServiceImpl implements SprintService {
         } else {
             throw new EntityNotFoundException("Sprint doesn't exist");
         }
+    }
+
+    @Override
+    public boolean existSprint(Long id) throws EntityNotFoundException {
+        return sprintRepository.existsById(id);
     }
 }

@@ -74,6 +74,19 @@ public class StudentsRestController {
         return ResponseEntity.ok(String.format("Student id %s updated", studentId));
     }
 
+
+    @Secured({"ROLE_ADMIN", "ROLE_MENTOR"})
+    @DeleteMapping(path = "/{studentId}")
+    public ResponseEntity<String> deleteMarathon(@PathVariable Long studentId) {
+        logger.info("** DELETE /api/students/" + studentId);
+        if (!userService.userExists(studentId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(String.format("User with ID %s does not exist", studentId));
+        }
+        userService.delete(studentId);
+        return ResponseEntity.ok(String.format("User with ID %s deleted", studentId));
+    }
+
     //TODO Move to Marathon
     @PatchMapping("/{marathonId}")
     public String removeStudentFromMarathon(@PathVariable Long marathonId, @RequestBody Long studentId) {

@@ -1,5 +1,7 @@
 package com.softserve.marathon.model;
 
+import com.fasterxml.jackson.annotation.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -17,12 +19,15 @@ public class Sprint {
     private LocalDate finish;
 
     @Column(name = "start_date", columnDefinition = "DATE")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate startDate;
 
     @NotNull
     private String title;
 
     @ManyToOne
+    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
     private Marathon marathon;
 
     @OneToMany(mappedBy = "sprint", fetch = FetchType.LAZY)
@@ -55,8 +60,8 @@ public class Sprint {
         return startDate;
     }
 
-    public void setStartDay(LocalDate startDay) {
-        this.startDate = startDay;
+    public void setStartDay(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
     public String getTitle() {

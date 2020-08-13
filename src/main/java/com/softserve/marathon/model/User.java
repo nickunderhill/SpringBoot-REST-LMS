@@ -1,6 +1,6 @@
 package com.softserve.marathon.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -12,10 +12,6 @@ import java.util.Objects;
 
 @Entity(name = "users")
 public class User {
-
-//    public enum Role {
-//        STUDENT, MENTOR
-//    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,21 +38,22 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-//    @Enumerated(EnumType.STRING)
-//    private Role role;
     @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
     @JoinColumn(name = "id_role")
-    @JsonIgnore
+    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="role")
+    @JsonIdentityReference(alwaysAsId=true)
     private Role role;
 
     @Transient
     @JsonIgnore
     private String confirmPassword;
+
     @JsonIgnore
     private boolean active;
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
     private List<Marathon> marathons = new ArrayList<>();
 
     public List<Progress> getProgresses() {
@@ -109,10 +106,12 @@ public class User {
         this.lastName = lastName;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }

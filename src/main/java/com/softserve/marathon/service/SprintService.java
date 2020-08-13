@@ -22,4 +22,6 @@ public interface SprintService {
     void finishSprint(Sprint sprint);
 
     Sprint getSprintById(Long id) throws EntityNotFoundException;
+
+    boolean existSprint(Long id) throws EntityNotFoundException;
 }
