@@ -58,7 +58,7 @@ public class StudentsRestController {
         }
         student.setRole(roleRepository.findByRole("ROLE_STUDENT"));
         userService.createOrUpdateUser(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body(String.format("New student created"));
+        return ResponseEntity.status(HttpStatus.CREATED).body("New student created");
     }
 
     @PutMapping("/{studentId}")
@@ -72,6 +72,19 @@ public class StudentsRestController {
         student.setId(studentId);
         userService.createOrUpdateUser(student);
         return ResponseEntity.ok(String.format("Student id %s updated", studentId));
+    }
+
+
+    @Secured({"ROLE_ADMIN", "ROLE_MENTOR"})
+    @DeleteMapping(path = "/{studentId}")
+    public ResponseEntity<String> deleteMarathon(@PathVariable Long studentId) {
+        logger.info("** DELETE /api/students/" + studentId);
+        if (!userService.userExists(studentId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(String.format("User with ID %s does not exist", studentId));
+        }
+        userService.delete(studentId);
+        return ResponseEntity.ok(String.format("User with ID %s deleted", studentId));
     }
 
     //TODO Move to Marathon

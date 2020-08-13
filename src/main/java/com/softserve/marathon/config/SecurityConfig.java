@@ -33,7 +33,7 @@ public class SecurityConfig {
                     .httpBasic().disable()
                     .csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/api/**").permitAll()
+                    .antMatchers("/api", "/api/registration", "/api/auth").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -76,6 +76,5 @@ public class SecurityConfig {
                     .logoutSuccessUrl("/form-login")
                     .deleteCookies("JSESSIONID");
         }
-
     }
 }

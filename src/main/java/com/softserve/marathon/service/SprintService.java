@@ -17,9 +17,11 @@ public interface SprintService {
 
     boolean updateSprint(Sprint sprint);
 
-    void createSpring(Sprint sprint);
+    void createSprint(Sprint sprint);
 
     void finishSprint(Sprint sprint);
 
     Sprint getSprintById(Long id) throws EntityNotFoundException;
+
+    boolean existSprint(Long id) throws EntityNotFoundException;
 }

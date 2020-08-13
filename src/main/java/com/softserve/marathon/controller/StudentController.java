@@ -37,7 +37,7 @@ public class StudentController {
     @GetMapping("")
     public String studentsList(Model model) {
         logger.info("Rendering student/list.html view");
-        model.addAttribute("students", userService.getAllByRole(roleRepository.findByRole("STUDENT")));
+        model.addAttribute("students", userService.getAllByRole(roleRepository.findByRole("ROLE_STUDENT")));
         return "student/list";
     }
 

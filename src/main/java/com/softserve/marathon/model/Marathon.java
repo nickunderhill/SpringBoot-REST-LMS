@@ -1,6 +1,6 @@
 package com.softserve.marathon.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -9,22 +9,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope=Marathon.class)
 public class Marathon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     private boolean closed;
+
     @NotNull
     @Length(min = 3, max = 20)
     private String title;
+
     @OneToMany(mappedBy = "marathon")
+    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
     private List<Sprint> sprints = new ArrayList<>();
+
     @ManyToMany(cascade={CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(name = "marathon_user",
             joinColumns = @JoinColumn(name = "id_marathon"),
             inverseJoinColumns = @JoinColumn(name = "id_user"))
-    @JsonIgnore
+    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
     private List<User> users = new ArrayList<>();
 
     public Marathon() {
@@ -54,6 +62,7 @@ public class Marathon {
     public void setTitle(String title) {
         this.title = title;
     }
+
 
     public List<Sprint> getSprints() {
         return sprints;
