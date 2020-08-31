@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope=Marathon.class)
-public class Marathon {
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope= Course.class)
+public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,28 +22,28 @@ public class Marathon {
     @Length(min = 3, max = 20)
     private String title;
 
-    @OneToMany(mappedBy = "marathon")
+    @OneToMany(mappedBy = "course")
     @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
     private List<Sprint> sprints = new ArrayList<>();
 
     @ManyToMany(cascade={CascadeType.PERSIST}, fetch = FetchType.EAGER)
-    @JoinTable(name = "marathon_user",
-            joinColumns = @JoinColumn(name = "id_marathon"),
+    @JoinTable(name = "course_user",
+            joinColumns = @JoinColumn(name = "id_course"),
             inverseJoinColumns = @JoinColumn(name = "id_user"))
     @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
     private List<User> users = new ArrayList<>();
 
-    public Marathon() {
+    public Course() {
     }
 
-    public Marathon(Long id, String title) {
+    public Course(Long id, String title) {
         this.id = id;
         this.title = title;
     }
 
-    public Marathon(String title) {
+    public Course(String title) {
         this.title = title;
     }
 
@@ -93,10 +93,10 @@ public class Marathon {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Marathon marathon = (Marathon) o;
+        Course course = (Course) o;
 
-        if (closed != marathon.closed) return false;
-        return title != null ? title.equals(marathon.title) : marathon.title == null;
+        if (closed != course.closed) return false;
+        return title != null ? title.equals(course.title) : course.title == null;
     }
 
     @Override

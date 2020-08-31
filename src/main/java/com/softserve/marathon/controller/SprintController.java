@@ -27,17 +27,17 @@ public class SprintController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/marathon/{marathonId}")
-    public String SprintListByMarathon(@PathVariable Long marathonId,
+    @GetMapping("/course/{courseId}")
+    public String sprintListByCourse(@PathVariable Long courseId,
                                        Model model,
                                        HttpServletRequest request) {
         String userEmail = request.getUserPrincipal().getName();
         Long studentId = userRepository.getUserByEmail(userEmail).getId();
         List<Sprint> sprints;
         if (request.isUserInRole("ROLE_STUDENT")) {
-            sprints = sprintService.getSprintByUserIdAndMarathon(studentId, marathonId);
+            sprints = sprintService.getSprintByUserIdAndCourse(studentId, courseId);
         } else {
-            sprints = sprintService.getSprintsByMarathon(marathonId);
+            sprints = sprintService.getSprintsByCourse(courseId);
         }
         model.addAttribute("sprints", sprints);
         logger.info("Rendering sprint/list.html view");

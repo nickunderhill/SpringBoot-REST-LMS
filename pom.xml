@@ -8,8 +8,8 @@
         <version>2.3.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.softserve.marathon</groupId>
-    <artifactId>softserve-marathon</artifactId>
+    <groupId>com.softserve.course</groupId>
+    <artifactId>softserve-course</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>JOM-Sprint18</name>
     <description>Demo project for Spring Boot</description>

@@ -5,7 +5,7 @@ import com.softserve.marathon.dto.UserRequest;
 import com.softserve.marathon.dto.UserResponse;
 import com.softserve.marathon.exception.EntityNotFoundException;
 import com.softserve.marathon.model.*;
-import com.softserve.marathon.repository.MarathonRepository;
+import com.softserve.marathon.repository.CourseRepository;
 import com.softserve.marathon.repository.ProgressRepository;
 import com.softserve.marathon.repository.RoleRepository;
 import com.softserve.marathon.repository.UserRepository;
@@ -28,16 +28,16 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final MarathonRepository marathonRepository;
+    private final CourseRepository marathonRepository;
     private final ProgressRepository progressRepository;
     private final RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, MarathonRepository marathonRepository, ProgressRepository progressRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, CourseRepository courseRepository, ProgressRepository progressRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.marathonRepository = marathonRepository;
+        this.marathonRepository = courseRepository;
         this.progressRepository = progressRepository;
         this.roleRepository = roleRepository;
 //        this.passwordEncoder = passwordEncoder;
@@ -156,19 +156,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public List<User> getAllByMarathon(Long marathonId) {
-        List<User> users = userRepository.getAllByMarathon(marathonId);
+    public List<User> getAllByCourse(Long marathonId) {
+        List<User> users = userRepository.getAllByCourse(marathonId);
         return !users.isEmpty() ? users : new ArrayList<>();
     }
 
     @Override
     @Transactional
-    public boolean addUserToMarathon(User user, Marathon marathon) {
+    public boolean addUserToCourse(User user, Course course) {
         User userInstance = userRepository.getOne(user.getId());
-        Marathon marathonInstance = marathonRepository.getOne(marathon.getId());
-        if (!marathonInstance.getUsers().contains(userInstance)) {
-            marathonInstance.getUsers().add(userInstance);
-            marathonRepository.save(marathonInstance);
+        Course courseInstance = marathonRepository.getOne(course.getId());
+        if (!courseInstance.getUsers().contains(userInstance)) {
+            courseInstance.getUsers().add(userInstance);
+            marathonRepository.save(courseInstance);
             return true;
         }
         return false;
@@ -176,12 +176,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean deleteUserFromMarathon(Long userId, Long marathonId) {
+    public boolean deleteUserFromCourse(Long userId, Long marathonId) {
         User userInstance = userRepository.getOne(userId);
-        Marathon marathonInstance = marathonRepository.getOne(marathonId);
-        if (marathonInstance.getUsers().contains(userInstance)) {
-            marathonInstance.getUsers().remove(userInstance);
-            marathonRepository.save(marathonInstance);
+        Course courseInstance = marathonRepository.getOne(marathonId);
+        if (courseInstance.getUsers().contains(userInstance)) {
+            courseInstance.getUsers().remove(userInstance);
+            marathonRepository.save(courseInstance);
             return true;
         }
         return false;

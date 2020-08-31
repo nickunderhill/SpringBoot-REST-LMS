@@ -67,7 +67,7 @@ public class UserRepositoryTest {
         user1.setLastName("Last name");
         user1.setPassword("password");
         userRepository.save(user1);
-        Assertions.assertEquals(0, userRepository.getAllByMarathon(1L).size());
+        Assertions.assertEquals(0, userRepository.getAllByCourse(1L).size());
     }
 
     @Test

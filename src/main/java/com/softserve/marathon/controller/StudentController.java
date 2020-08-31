@@ -1,9 +1,9 @@
 package com.softserve.marathon.controller;
 
-import com.softserve.marathon.model.Marathon;
+import com.softserve.marathon.model.Course;
 import com.softserve.marathon.model.User;
 import com.softserve.marathon.repository.RoleRepository;
-import com.softserve.marathon.service.MarathonService;
+import com.softserve.marathon.service.CourseService;
 import com.softserve.marathon.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +23,12 @@ import java.util.List;
 public class StudentController {
     Logger logger = LoggerFactory.getLogger(StudentController.class);
     private final UserService userService;
-    private final MarathonService marathonService;
+    private final CourseService courseService;
     private final RoleRepository roleRepository;
 
-    public StudentController(UserService userService, MarathonService marathonService, RoleRepository roleRepository) {
+    public StudentController(UserService userService, CourseService courseService, RoleRepository roleRepository) {
         this.userService = userService;
-        this.marathonService = marathonService;
+        this.courseService = courseService;
         this.roleRepository = roleRepository;
     }
 
@@ -43,20 +43,20 @@ public class StudentController {
 
     //Students from specified marathon
     @GetMapping("/{marathonId}")
-    public String studentsListByMarathon(Model model, @PathVariable Long marathonId) {
-        logger.info("Rendering student/listByMarathon.html view");
-        List<User> students = marathonService.getMarathonById(marathonId).getUsers();
+    public String studentsListByCourse(Model model, @PathVariable Long marathonId) {
+        logger.info("Rendering student/listByCourse.html view");
+        List<User> students = courseService.getCourseById(marathonId).getUsers();
         List<User> allStudents = userService.getAll();
         model.addAttribute("students", students);
         model.addAttribute("allStudents", allStudents);
-        return "student/listByMarathon";
+        return "student/listByCourse";
     }
 
     //Delete user from marathon
     @GetMapping("/{marathonId}/delete/{studentId}")
-    public String deleteStudentFromMarathon(@PathVariable Long marathonId, @PathVariable Long studentId) {
+    public String deleteStudentFromCourse(@PathVariable Long marathonId, @PathVariable Long studentId) {
         User student = userService.getUserById(studentId);
-        userService.deleteUserFromMarathon(student.getId(), marathonId);
+        userService.deleteUserFromCourse(student.getId(), marathonId);
         logger.info("Deleting student id " + studentId + " from marathon id " + marathonId);
         return "redirect:/students/{marathonId}";
     }
@@ -112,8 +112,8 @@ public class StudentController {
         student.setRole(roleRepository.findByRole("ROLE_STUDENT"));
         try {
             /*User newStudent = */userService.createOrUpdateUser(student);
-            Marathon marathon = marathonService.getMarathonById(marathonId);
-            userService.addUserToMarathon(student, marathon);
+            Course course = courseService.getCourseById(marathonId);
+            userService.addUserToCourse(student, course);
         } catch (DataIntegrityViolationException e) {
             logger.info("DataIntegrityViolationException occurred::" + "Error=" + e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", "This email is already in use.");
@@ -128,9 +128,9 @@ public class StudentController {
     public String addStudent(@RequestParam("studentId") long studentId,
                              @PathVariable long marathonId) {
         logger.info("Adding student id " + studentId + " to marathon " + marathonId);
-        userService.addUserToMarathon(
+        userService.addUserToCourse(
                 userService.getUserById(studentId),
-                marathonService.getMarathonById(marathonId));
+                courseService.getCourseById(marathonId));
         return "redirect:/students/{marathonId}";
     }
 }

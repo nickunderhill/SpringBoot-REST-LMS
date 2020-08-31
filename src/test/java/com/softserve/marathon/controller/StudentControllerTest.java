@@ -1,9 +1,9 @@
 package com.softserve.marathon.controller;
 
+import com.softserve.marathon.model.Course;
 import com.softserve.marathon.model.Role;
-import com.softserve.marathon.service.MarathonService;
+import com.softserve.marathon.service.CourseService;
 import com.softserve.marathon.service.UserService;
-import com.softserve.marathon.model.Marathon;
 import com.softserve.marathon.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -25,23 +25,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class StudentControllerTest {
     private final MockMvc mockMvc;
     private final UserService userService;
-    private final MarathonService marathonService;
+    private final CourseService courseService;
     Role trainee = new Role("STUDENT");
 
     @Autowired
-    public StudentControllerTest(MockMvc mockMvc, UserService userService, MarathonService marathonService) {
+    public StudentControllerTest(MockMvc mockMvc, UserService userService, CourseService courseService) {
         this.mockMvc = mockMvc;
         this.userService = userService;
-        this.marathonService = marathonService;
+        this.courseService = courseService;
         setup();
     }
 
     public void setup() {
         //CREATE MARATHONS
-        Marathon marathon1 = new Marathon("Marathon 1");
-        marathonService.createOrUpdateMarathon(marathon1);
-        Marathon marathon2 = new Marathon("Marathon 2");
-        marathonService.createOrUpdateMarathon(marathon2);
+        Course course1 = new Course("Course 1");
+        courseService.createOrUpdateCourse(course1);
+        Course course2 = new Course("Course 2");
+        courseService.createOrUpdateCourse(course2);
         // CREATE STUDENTS
         for (int i = 0; i < 10; i++) {
             User u = new User();
@@ -51,7 +51,7 @@ public class StudentControllerTest {
             u.setPassword("password" + i);
             u.setRole(trainee);
             userService.createOrUpdateUser(u);
-            userService.addUserToMarathon(u, i % 2 == 0 ? marathon1 : marathon2);
+            userService.addUserToCourse(u, i % 2 == 0 ? course1 : course2);
         }
         //CREATE MENTORS
         for (int i = 0; i < 3; i++) {
@@ -76,9 +76,9 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void studentsListByMarathonTest() throws Exception {
-        Marathon marathon = new Marathon("test");
-        marathonService.createOrUpdateMarathon(marathon);
+    public void studentsListByCourseTest() throws Exception {
+        Course course = new Course("test");
+        courseService.createOrUpdateCourse(course);
 
         User student = new User();
         student.setRole(trainee);
@@ -87,12 +87,12 @@ public class StudentControllerTest {
         student.setLastName("Last name");
         student.setPassword("password");
         userService.createOrUpdateUser(student);
-        userService.addUserToMarathon(student,marathon);
+        userService.addUserToCourse(student, course);
 
-        List<User> expected = userService.getAllByMarathon(marathon.getId());
+        List<User> expected = userService.getAllByCourse(course.getId());
         List<User> allStudents = userService.getAll();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/students/{marathonId}", marathon.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/students/{marathonId}", course.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("students"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("allStudents"))
@@ -101,7 +101,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void deleteStudentFromMarathonTest() throws Exception {
+    public void deleteStudentFromCourseTest() throws Exception {
         User student = new User();
         student.setRole(trainee);
         student.setEmail("user2@test.com");
@@ -109,11 +109,11 @@ public class StudentControllerTest {
         student.setLastName("Last name");
         student.setPassword("password");
         userService.createOrUpdateUser(student);
-        Marathon marathon = new Marathon("test");
-        marathonService.createOrUpdateMarathon(marathon);
-        mockMvc.perform(MockMvcRequestBuilders.get("/students/{marathonId}/delete/{studentId}", marathon.getId(), student.getId()))
+        Course course = new Course("test");
+        courseService.createOrUpdateCourse(course);
+        mockMvc.perform(MockMvcRequestBuilders.get("/students/{marathonId}/delete/{studentId}", course.getId(), student.getId()))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
-        assertEquals(-1, marathon.getUsers().indexOf(student));
+        assertEquals(-1, course.getUsers().indexOf(student));
     }
 
     @Test
@@ -124,10 +124,10 @@ public class StudentControllerTest {
         expected.setFirstName("First name");
         expected.setLastName("Last name");
         expected.setPassword("password");
-        Marathon marathon = new Marathon("test");
-        marathonService.createOrUpdateMarathon(marathon);
+        Course course = new Course("test");
+        courseService.createOrUpdateCourse(course);
         userService.createOrUpdateUser(expected);
-        mockMvc.perform(MockMvcRequestBuilders.get("/students/{marathonId}/edit/{studentId}", marathon.getId(), expected.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/students/{marathonId}/edit/{studentId}", course.getId(), expected.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("student", expected));
     }
@@ -140,17 +140,17 @@ public class StudentControllerTest {
         user.setFirstName("First name");
         user.setLastName("Last name");
         user.setPassword("password");
-        Marathon marathon = new Marathon("test");
-        marathonService.createOrUpdateMarathon(marathon);
+        Course course = new Course("test");
+        courseService.createOrUpdateCourse(course);
         userService.createOrUpdateUser(user);
-        mockMvc.perform(MockMvcRequestBuilders.post("/students/{marathonId}/edit/{studentId}", marathon.getId(), user.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/students/{marathonId}/edit/{studentId}", course.getId(), user.getId())
                 .param("id", String.valueOf(user.getId()))
                 .param("email", "user10@test.com")
                 .param("firstName", "First name new")
                 .param("lastName", "Last name new")
                 .param("password", "password1"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
-        mockMvc.perform(MockMvcRequestBuilders.post("/students/{marathonId}/edit/{studentId}", marathon.getId(), user.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/students/{marathonId}/edit/{studentId}", course.getId(), user.getId())
                 .param("id", String.valueOf(user.getId())))
                 .andExpect(MockMvcResultMatchers.status().isOk());
         assertEquals("user10@test.com", userService.getUserById(user.getId()).getEmail());
@@ -158,31 +158,31 @@ public class StudentControllerTest {
 
     @Test
     public void createStudentFormTest() throws Exception {
-        Marathon marathon = new Marathon("test");
-        marathonService.createOrUpdateMarathon(marathon);
-        mockMvc.perform(MockMvcRequestBuilders.get("/students/{marathonId}/create", marathon.getId()))
+        Course course = new Course("test");
+        courseService.createOrUpdateCourse(course);
+        mockMvc.perform(MockMvcRequestBuilders.get("/students/{marathonId}/create", course.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("student"));
     }
 
     @Test
     public void createStudentFormSubmitTest() throws Exception {
-        Marathon marathon = new Marathon("test");
-        marathonService.createOrUpdateMarathon(marathon);
-        mockMvc.perform(MockMvcRequestBuilders.post("/students/{marathonId}/create", marathon.getId())
+        Course course = new Course("test");
+        courseService.createOrUpdateCourse(course);
+        mockMvc.perform(MockMvcRequestBuilders.post("/students/{marathonId}/create", course.getId())
                 .param("email", "user5@test.com")
                 .param("firstName", "First name")
                 .param("lastName", "Last name")
                 .param("password", "password"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
         User expected = userService.getUserByEmail("user5@test.com");
-        assertTrue(marathonService.getMarathonById(marathon.getId()).getUsers().contains(expected));
+        assertTrue(courseService.getCourseById(course.getId()).getUsers().contains(expected));
     }
 
     @Test
     public void addStudentTest() throws Exception {
-        Marathon marathon = new Marathon("test");
-        marathonService.createOrUpdateMarathon(marathon);
+        Course course = new Course("test");
+        courseService.createOrUpdateCourse(course);
         User user = new User();
         user.setRole(trainee);
         user.setEmail("user6@test.com");
@@ -190,10 +190,10 @@ public class StudentControllerTest {
         user.setLastName("Last name");
         user.setPassword("password");
         userService.createOrUpdateUser(user);
-        mockMvc.perform(MockMvcRequestBuilders.get("/students/{marathonId}/add", marathon.getId())
+        mockMvc.perform(MockMvcRequestBuilders.get("/students/{marathonId}/add", course.getId())
                 .param("studentId", String.valueOf(user.getId())))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
         User expected = userService.getUserByEmail("user6@test.com");
-        assertTrue(marathonService.getMarathonById(marathon.getId()).getUsers().contains(expected));
+        assertTrue(courseService.getCourseById(course.getId()).getUsers().contains(expected));
     }
 }

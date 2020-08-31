@@ -54,7 +54,7 @@ public class User {
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
     @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
-    private List<Marathon> marathons = new ArrayList<>();
+    private List<Course> courses = new ArrayList<>();
 
     public List<Progress> getProgresses() {
         return progresses;
@@ -124,8 +124,8 @@ public class User {
         this.role = role;
     }
 
-    public List<Marathon> getMarathons() {
-        return marathons;
+    public List<Course> getCourses() {
+        return courses;
     }
 
     public String getConfirmPassword() {
@@ -158,7 +158,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getEmail(), getFirstName(), getLastName(), getPassword(), getRole(), getMarathons());
+        return Objects.hash(getId(), getEmail(), getFirstName(), getLastName(), getPassword(), getRole(), getCourses());
     }
 
     @Override

@@ -28,7 +28,7 @@ public class Sprint {
     @ManyToOne
     @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
-    private Marathon marathon;
+    private Course course;
 
     @OneToMany(mappedBy = "sprint", fetch = FetchType.LAZY)
     private List<Task> tasks = new ArrayList<>();
@@ -80,12 +80,12 @@ public class Sprint {
         this.tasks = tasks;
     }
 
-    public Marathon getMarathon() {
-        return marathon;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setMarathon(Marathon marathon) {
-        this.marathon = marathon;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     @Override
@@ -97,12 +97,12 @@ public class Sprint {
                 finish.equals(sprint.finish) &&
                 startDate.equals(sprint.startDate) &&
                 title.equals(sprint.title) &&
-                marathon.equals(sprint.marathon);
+                course.equals(sprint.course);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, finish, startDate, title, marathon);
+        return Objects.hash(id, finish, startDate, title, course);
     }
 }
 

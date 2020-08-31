@@ -52,11 +52,11 @@ public class ProgressRepositoryTest {
 //        //given
         User user = new User("test2@email", "petro", "petro", "password2", trainee);
         entityManager.persistAndFlush(user);
-        Marathon marathon = new Marathon("second marathon");
-        marathon.setUsers(Collections.singletonList(user));
-        entityManager.persistAndFlush(marathon);
+        Course course = new Course("second marathon");
+        course.setUsers(Collections.singletonList(user));
+        entityManager.persistAndFlush(course);
         Sprint sprint = new Sprint("OOP");
-        sprint.setMarathon(marathon);
+        sprint.setCourse(course);
         entityManager.persistAndFlush(sprint);
         Task task = new Task("task");
         task.setSprint(sprint);
@@ -67,7 +67,7 @@ public class ProgressRepositoryTest {
         progress.setStatus("start");
         entityManager.persistAndFlush(progress);
         //when
-        List<Progress> progresses = progressRepository.allProgressByUserIdAndMarathonId(user.getId(), marathon.getId());
+        List<Progress> progresses = progressRepository.allProgressByUserIdAndCourseId(user.getId(), course.getId());
         //then
         assertEquals(1, progresses.size());
         assertEquals(user.getId(), progresses.get(0).getUser().getId());

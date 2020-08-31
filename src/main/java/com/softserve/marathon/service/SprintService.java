@@ -1,7 +1,7 @@
 package com.softserve.marathon.service;
 
 import com.softserve.marathon.exception.EntityNotFoundException;
-import com.softserve.marathon.model.Marathon;
+import com.softserve.marathon.model.Course;
 import com.softserve.marathon.model.Sprint;
 
 import java.util.List;
@@ -9,11 +9,11 @@ import java.util.List;
 public interface SprintService {
     void delete(Long id) throws EntityNotFoundException;
 
-    List<Sprint> getSprintsByMarathon(Long id);
+    List<Sprint> getSprintsByCourse(Long id);
 
-    List<Sprint> getSprintByUserIdAndMarathon(Long userId, Long marathonId);
+    List<Sprint> getSprintByUserIdAndCourse(Long userId, Long courseId);
 
-    boolean addSprintToMarathon(Sprint sprint, Marathon marathon);
+    boolean addSprintToCourse(Sprint sprint, Course course);
 
     boolean updateSprint(Sprint sprint);
 

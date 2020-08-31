@@ -2,7 +2,7 @@ package com.softserve.marathon.service;
 
 import com.softserve.marathon.dto.UserRequest;
 import com.softserve.marathon.dto.UserResponse;
-import com.softserve.marathon.model.Marathon;
+import com.softserve.marathon.model.Course;
 import com.softserve.marathon.model.Role;
 import com.softserve.marathon.model.Task;
 import com.softserve.marathon.model.User;
@@ -27,7 +27,7 @@ public interface UserService {
 
     boolean createOrUpdateUser(User user);
 
-    // for MarathonRestController
+    // for CourseRestController
     boolean saveUser(UserRequest userRequest);
 
     UserResponse findByLoginAndPassword(UserRequest userRequest);
@@ -36,11 +36,11 @@ public interface UserService {
 
     List<User> getAllByRole(Role role);
 
-    List<User> getAllByMarathon(Long marathonId);
+    List<User> getAllByCourse(Long courseId);
 
-    boolean addUserToMarathon(User user, Marathon marathon);
+    boolean addUserToCourse(User user, Course course);
 
-    boolean deleteUserFromMarathon(Long user, Long marathon);
+    boolean deleteUserFromCourse(Long user, Long course);
 
     boolean addUserToTask(User user, Task task);
 }

@@ -10,12 +10,12 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
-public class  SoftServeMarathonApplication implements CommandLineRunner {
+public class  SoftServeCourseApplication implements CommandLineRunner {
     @Autowired
     RoleRepository roleRepository;
 
     public static void main(String[] args) {
-        SpringApplication.run(SoftServeMarathonApplication.class, args);
+        SpringApplication.run(SoftServeCourseApplication.class, args);
     }
 
     @Override
