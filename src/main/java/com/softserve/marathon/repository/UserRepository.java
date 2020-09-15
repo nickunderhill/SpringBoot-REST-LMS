@@ -17,9 +17,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> getAllByRole(Role role);
 
     @Query(value = "SELECT U.* FROM USERS U\n" +
-            "JOIN MARATHON_USER MU ON MU.ID_USER  = U.ID \n" +
-            "WHERE MU.ID_MARATHON = ?1", nativeQuery = true)
-    List<User> getAllByMarathon(Long id);
+            "JOIN COURSE_USER MU ON MU.ID_USER  = U.ID \n" +
+            "WHERE MU.ID_COURSE = ?1", nativeQuery = true)
+    List<User> getAllByCourse(Long id);
 
     Boolean existsByEmail(String email);
 

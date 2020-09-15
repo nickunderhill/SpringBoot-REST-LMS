@@ -38,10 +38,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinColumn(name = "id_role")
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="role")
-    @JsonIdentityReference(alwaysAsId=true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "role")
+    @JsonIdentityReference(alwaysAsId = true)
     private Role role;
 
     @Transient
@@ -52,9 +52,9 @@ public class User {
     private boolean active;
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
-    private List<Marathon> marathons = new ArrayList<>();
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<Course> courses = new ArrayList<>();
 
     public List<Progress> getProgresses() {
         return progresses;
@@ -124,8 +124,8 @@ public class User {
         this.role = role;
     }
 
-    public List<Marathon> getMarathons() {
-        return marathons;
+    public List<Course> getCourses() {
+        return courses;
     }
 
     public String getConfirmPassword() {
@@ -158,7 +158,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getEmail(), getFirstName(), getLastName(), getPassword(), getRole(), getMarathons());
+        return Objects.hash(getId(), getEmail(), getFirstName(), getLastName(), getPassword(), getRole(), getCourses());
     }
 
     @Override

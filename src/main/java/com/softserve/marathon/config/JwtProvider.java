@@ -1,6 +1,6 @@
 package com.softserve.marathon.config;
 
-import com.softserve.marathon.controller.MarathonController;
+import com.softserve.marathon.controller.CourseController;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

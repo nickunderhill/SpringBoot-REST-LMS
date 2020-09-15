@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.marathon.model.User;
 import com.softserve.marathon.repository.RoleRepository;
-import com.softserve.marathon.service.MarathonService;
+import com.softserve.marathon.service.CourseService;
 import com.softserve.marathon.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,14 +23,14 @@ public class StudentsRestController {
     Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     private final UserService userService;
-    private final MarathonService marathonService;
+    private final CourseService courseService;
     private final RoleRepository roleRepository;
     private final ObjectMapper mapper;
 
     @Autowired
-    public StudentsRestController(UserService userService, MarathonService marathonService, RoleRepository roleRepository, ObjectMapper mapper) {
+    public StudentsRestController(UserService userService, CourseService courseService, RoleRepository roleRepository, ObjectMapper mapper) {
         this.userService = userService;
-        this.marathonService = marathonService;
+        this.courseService = courseService;
         this.roleRepository = roleRepository;
         this.mapper = mapper;
     }
@@ -41,10 +41,10 @@ public class StudentsRestController {
         return userService.getAllByRole(roleRepository.findByRole("ROLE_STUDENT"));
     }
 
-    @GetMapping("/marathon/{marathonId}")
-    public List<User> studentsListByMarathon(@PathVariable Long marathonId) {
-        logger.info("** GET /api/students/marathon/" + marathonId);
-        return marathonService.getMarathonById(marathonId).getUsers();
+    @GetMapping("/course/{courseId}")
+    public List<User> studentsListByCourse(@PathVariable Long courseId) {
+        logger.info("** GET /api/students/course/" + courseId);
+        return courseService.getCourseById(courseId).getUsers();
     }
 
     @PostMapping
@@ -77,7 +77,7 @@ public class StudentsRestController {
 
     @Secured({"ROLE_ADMIN", "ROLE_MENTOR"})
     @DeleteMapping(path = "/{studentId}")
-    public ResponseEntity<String> deleteMarathon(@PathVariable Long studentId) {
+    public ResponseEntity<String> deleteCourse(@PathVariable Long studentId) {
         logger.info("** DELETE /api/students/" + studentId);
         if (!userService.userExists(studentId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -87,23 +87,23 @@ public class StudentsRestController {
         return ResponseEntity.ok(String.format("User with ID %s deleted", studentId));
     }
 
-    //TODO Move to Marathon
-    @PatchMapping("/{marathonId}")
-    public String removeStudentFromMarathon(@PathVariable Long marathonId, @RequestBody Long studentId) {
-        logger.info("Deleting /api/ student id " + studentId + " from marathon id " + marathonId);
+    //TODO Move to Course
+    @PatchMapping("/{courseId}")
+    public String removeStudentFromCourse(@PathVariable Long courseId, @RequestBody Long studentId) {
+        logger.info("Deleting /api/ student id " + studentId + " from course id " + courseId);
         User student = userService.getUserById(studentId);
-        userService.deleteUserFromMarathon(student.getId(), marathonId);
-        return "redirect:/students/{marathonId}";
+        userService.deleteUserFromCourse(student.getId(), courseId);
+        return "redirect:/students/{courseId}";
     }
 
-    //TODO Move to Marathon
-    @GetMapping("/{marathonId}/add")
+    //TODO Move to Course
+    @GetMapping("/{courseId}/add")
     public String addStudent(@RequestParam("studentId") long studentId,
-                             @PathVariable long marathonId) {
-        logger.info("Adding student id " + studentId + " to marathon " + marathonId);
-        userService.addUserToMarathon(
+                             @PathVariable long courseId) {
+        logger.info("Adding student id " + studentId + " to course " + courseId);
+        userService.addUserToCourse(
                 userService.getUserById(studentId),
-                marathonService.getMarathonById(marathonId));
-        return "redirect:/students/{marathonId}";
+                courseService.getCourseById(courseId));
+        return "redirect:/students/{courseId}";
     }
 }

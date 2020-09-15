@@ -3,7 +3,7 @@
 <html xmlns:th="https://www.thymeleaf.org">
 
 <head th:replace="fragments/header :: common_header(~{::title})">
-    <title th:text="'Marathon #' + ${marathonId} + ' Student List'"></title>
+    <title th:text="'Course #' + ${courseId} + ' Student List'"></title>
 </head>
 
 <body>
@@ -11,18 +11,18 @@
 <div th:replace="fragments/navbar :: nav"></div>
 
 <div class="container">
-    <h2 th:text="'Marathon #' + ${marathonId} + ' Student List'"></h2>
+    <h2 th:text="'Course #' + ${courseId} + ' Student List'"></h2>
     <div class="container" id="action-bar">
         <div class="row align-items-center">
             <div class="col-md-3">
-                <a th:href="@{/students/{marathon}/create(marathon=${marathonId})}" class="btn btn-primary"
+                <a th:href="@{/students/{course}/create(course=${courseId})}" class="btn btn-primary"
                    role="button">Create New Student</a>
             </div>
             <div class="col">
-                <form th:action="@{/students/{marathon}/add(marathon=${marathonId})}" method="get">
+                <form th:action="@{/students/{course}/add(course=${courseId})}" method="get">
                     <div class="form-row align-items-center col-auto my-1">
                         <div class="col-auto my-1">
-                            <label class="col mr-sm-2 form-inline" for="students" style>Add Student to Marathon:</label>
+                            <label class="col mr-sm-2 form-inline" for="students" style>Add Student to Course:</label>
                         </div>
                         <div class="col-auto my-1">
                             <select class="custom-select mr-sm-2" id="students" name="studentId">
@@ -58,9 +58,9 @@
             <td th:text="${student.lastName}"></td>
             <td th:text="${student.email}"></td>
             <td>
-                <a th:href="@{/students/{marathon}/edit/{student}(marathon=${marathonId},student=${student.id})}"
+                <a th:href="@{/students/{course}/edit/{student}(course=${courseId},student=${student.id})}"
                    class="btn btn-warning" role="button">Edit</a>
-                <a th:href="@{/students/{marathon}/delete/{student}(marathon=${marathonId},student=${student.id})}"
+                <a th:href="@{/students/{course}/delete/{student}(course=${courseId},student=${student.id})}"
                    class="btn btn-danger" role="button">Delete</a>
             </td>
         </tr>

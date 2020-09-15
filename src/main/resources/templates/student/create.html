@@ -3,7 +3,7 @@
 <html xmlns:th="https://www.thymeleaf.org">
 
 <head th:replace="fragments/header :: common_header(~{::title})">
-    <title th:text="'Add Student to Marathon #' + ${marathonId}"></title>
+    <title th:text="'Add Student to Course #' + ${courseId}"></title>
 </head>
 
 <body>
@@ -13,12 +13,12 @@
     <div class="container" id="action-bar">
         <div class="row align-items-center">
             <div class="col-md-2 offset-md-10 text-right">
-                <a th:href="@{/students/{marathon}(marathon=${marathonId})}" class="btn btn-primary" role="button">Go Back</a>
+                <a th:href="@{/students/{course}(course=${courseId})}" class="btn btn-primary" role="button">Go Back</a>
             </div>
         </div>
     </div>
-    <h2 th:text="'Add Student to Marathon #' + ${marathonId}"></h2>
-    <form th:action="@{/students/{marathon}/create(marathon=${marathonId})}" th:object="${student}" method="post">
+    <h2 th:text="'Add Student to Course #' + ${courseId}"></h2>
+    <form th:action="@{/students/{course}/create(course=${courseId})}" th:object="${student}" method="post">
         <div class="form-group">
             <label for="Email">Email address</label>
             <input type="email" th:field="*{email}" class="form-control" id="Email" placeholder="Enter email">

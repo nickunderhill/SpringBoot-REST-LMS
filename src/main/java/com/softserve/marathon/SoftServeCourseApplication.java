@@ -1,7 +1,9 @@
 package com.softserve.marathon;
 
 import com.softserve.marathon.model.Role;
+import com.softserve.marathon.model.Sprint;
 import com.softserve.marathon.repository.RoleRepository;
+import com.softserve.marathon.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,12 +12,12 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
-public class  SoftServeMarathonApplication implements CommandLineRunner {
+public class  SoftServeCourseApplication implements CommandLineRunner {
     @Autowired
     RoleRepository roleRepository;
 
     public static void main(String[] args) {
-        SpringApplication.run(SoftServeMarathonApplication.class, args);
+        SpringApplication.run(SoftServeCourseApplication.class, args);
     }
 
     @Override

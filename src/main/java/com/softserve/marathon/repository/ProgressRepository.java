@@ -17,8 +17,8 @@ public interface ProgressRepository extends JpaRepository<Progress, Long> {
 
     @Query(value = "select * from progress where user_id =?1 and task_id in " +
             "(select id from task where sprint_id in " +
-            "(select id from sprint where marathon_id =?2))", nativeQuery = true)
-    List<Progress> allProgressByUserIdAndMarathonId(Long userId, Long marathonId);
+            "(select id from sprint where course_id =?2))", nativeQuery = true)
+    List<Progress> allProgressByUserIdAndCourseId(Long userId, Long courseId);
 
     @Query(value = "select * from progress where user_id =?1 and task_id in " +
             "(select id from task where sprint_id =?2)", nativeQuery = true)

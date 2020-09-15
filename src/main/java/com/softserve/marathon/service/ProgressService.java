@@ -16,7 +16,7 @@ public interface ProgressService {
 
     boolean setStatus(String taskStatus, Progress progress);
 
-    List<Progress> allProgressByUserIdAndMarathonId(Long userId, Long marathonId);
+    List<Progress> allProgressByUserIdAndCourseId(Long userId, Long courseId);
 
     List<Progress> allProgressByUserIdAndSprintId(Long userId, Long sprintId);
 

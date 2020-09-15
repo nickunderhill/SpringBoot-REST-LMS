@@ -1,9 +1,9 @@
 package com.softserve.marathon.controller;
 
-import com.softserve.marathon.model.Marathon;
+import com.softserve.marathon.model.Course;
 import com.softserve.marathon.model.User;
 import com.softserve.marathon.repository.RoleRepository;
-import com.softserve.marathon.service.MarathonService;
+import com.softserve.marathon.service.CourseService;
 import com.softserve.marathon.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +23,12 @@ import java.util.List;
 public class StudentController {
     Logger logger = LoggerFactory.getLogger(StudentController.class);
     private final UserService userService;
-    private final MarathonService marathonService;
+    private final CourseService courseService;
     private final RoleRepository roleRepository;
 
-    public StudentController(UserService userService, MarathonService marathonService, RoleRepository roleRepository) {
+    public StudentController(UserService userService, CourseService courseService, RoleRepository roleRepository) {
         this.userService = userService;
-        this.marathonService = marathonService;
+        this.courseService = courseService;
         this.roleRepository = roleRepository;
     }
 
@@ -41,29 +41,29 @@ public class StudentController {
         return "student/list";
     }
 
-    //Students from specified marathon
-    @GetMapping("/{marathonId}")
-    public String studentsListByMarathon(Model model, @PathVariable Long marathonId) {
-        logger.info("Rendering student/listByMarathon.html view");
-        List<User> students = marathonService.getMarathonById(marathonId).getUsers();
+    //Students from specified course
+    @GetMapping("/{courseId}")
+    public String studentsListByCourse(Model model, @PathVariable Long courseId) {
+        logger.info("Rendering student/listByCourse.html view");
+        List<User> students = courseService.getCourseById(courseId).getUsers();
         List<User> allStudents = userService.getAll();
         model.addAttribute("students", students);
         model.addAttribute("allStudents", allStudents);
-        return "student/listByMarathon";
+        return "student/listByCourse";
     }
 
-    //Delete user from marathon
-    @GetMapping("/{marathonId}/delete/{studentId}")
-    public String deleteStudentFromMarathon(@PathVariable Long marathonId, @PathVariable Long studentId) {
+    //Delete user from course
+    @GetMapping("/{courseId}/delete/{studentId}")
+    public String deleteStudentFromCourse(@PathVariable Long courseId, @PathVariable Long studentId) {
         User student = userService.getUserById(studentId);
-        userService.deleteUserFromMarathon(student.getId(), marathonId);
-        logger.info("Deleting student id " + studentId + " from marathon id " + marathonId);
-        return "redirect:/students/{marathonId}";
+        userService.deleteUserFromCourse(student.getId(), courseId);
+        logger.info("Deleting student id " + studentId + " from course id " + courseId);
+        return "redirect:/students/{courseId}";
     }
 
     //Edit user
-    @GetMapping("/{marathonId}/edit/{studentId}")
-    public String editStudentForm(@PathVariable Long marathonId,
+    @GetMapping("/{courseId}/edit/{studentId}")
+    public String editStudentForm(@PathVariable Long courseId,
                                   @PathVariable Long studentId,
                                   Model model) {
         logger.info("Rendering student/edit.html view");
@@ -72,65 +72,65 @@ public class StudentController {
     }
 
     //Edit user
-    @PostMapping("/{marathonId}/edit/{studentId}")
+    @PostMapping("/{courseId}/edit/{studentId}")
     public String editStudentFormSubmit(@Valid @ModelAttribute("student") User student,
                                         BindingResult bindingResult,
                                         @PathVariable Long studentId,
-                                        @PathVariable Long marathonId) {
+                                        @PathVariable Long courseId) {
         if (bindingResult.hasErrors()) {
             logger.error("Error(s) updating student id " + studentId + ": " + bindingResult.getAllErrors());
             return "student/edit";
         }
         userService.createOrUpdateUser(student);
         logger.info("Updating student id: " + studentId);
-        return "redirect:/students/{marathonId}";
+        return "redirect:/students/{courseId}";
     }
 
     //Create user
-    @GetMapping("/{marathonId}/create")
-    public String createStudentForm(@PathVariable Long marathonId, Model model,
+    @GetMapping("/{courseId}/create")
+    public String createStudentForm(@PathVariable Long courseId, Model model,
                                     @ModelAttribute("errorMessage") String errorMessage,
                                     @ModelAttribute("student") User student) {
         logger.info("Rendering student/create.html view");
-        model.addAttribute(marathonId);
+        model.addAttribute(courseId);
         model.addAttribute("errorMessage", errorMessage);
         model.addAttribute("student", student != null ? student : new User());
         return "student/create";
     }
 
     //Create user
-    @PostMapping("/{marathonId}/create")
+    @PostMapping("/{courseId}/create")
     public String createStudentFormSubmit(@Valid @ModelAttribute("student") User student,
                                           BindingResult bindingResult,
-                                          @PathVariable Long marathonId,
+                                          @PathVariable Long courseId,
                                           RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             logger.error("Error(s) creating student" + bindingResult.getAllErrors());
             return "student/create";
         }
-        logger.info("Creating new student for marathon " + marathonId);
+        logger.info("Creating new student for course " + courseId);
         student.setRole(roleRepository.findByRole("ROLE_STUDENT"));
         try {
             /*User newStudent = */userService.createOrUpdateUser(student);
-            Marathon marathon = marathonService.getMarathonById(marathonId);
-            userService.addUserToMarathon(student, marathon);
+            Course course = courseService.getCourseById(courseId);
+            userService.addUserToCourse(student, course);
         } catch (DataIntegrityViolationException e) {
             logger.info("DataIntegrityViolationException occurred::" + "Error=" + e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", "This email is already in use.");
             redirectAttributes.addFlashAttribute("student", student);
-            return "redirect:/students/{marathonId}/create";
+            return "redirect:/students/{courseId}/create";
         }
-        return "redirect:/students/{marathonId}";
+        return "redirect:/students/{courseId}";
     }
 
-    //Add user to marathon
-    @GetMapping("/{marathonId}/add")
+    //Add user to course
+    @GetMapping("/{courseId}/add")
     public String addStudent(@RequestParam("studentId") long studentId,
-                             @PathVariable long marathonId) {
-        logger.info("Adding student id " + studentId + " to marathon " + marathonId);
-        userService.addUserToMarathon(
+                             @PathVariable long courseId) {
+        logger.info("Adding student id " + studentId + " to course " + courseId);
+        userService.addUserToCourse(
                 userService.getUserById(studentId),
-                marathonService.getMarathonById(marathonId));
-        return "redirect:/students/{marathonId}";
+                courseService.getCourseById(courseId));
+        return "redirect:/students/{courseId}";
     }
 }

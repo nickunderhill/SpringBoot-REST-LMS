@@ -13,12 +13,12 @@
     <div class="container" id="action-bar">
         <div class="row align-items-center">
             <div class="col-md-2 offset-md-10 text-right">
-                <a th:href="@{/students/{marathon}(marathon=${marathonId})}" class="btn btn-primary" role="button">Go Back</a>
+                <a th:href="@{/students/{course}(course=${courseId})}" class="btn btn-primary" role="button">Go Back</a>
             </div>
         </div>
     </div>
     <h2 th:text="'Edit Student id ' + ${studentId}"></h2>
-    <form th:action="@{/students/{marathon}/edit/{student}(marathon=${marathonId}, student=${studentId})}" th:object="${student}" method="post">
+    <form th:action="@{/students/{course}/edit/{student}(course=${courseId}, student=${studentId})}" th:object="${student}" method="post">
         <div class="form-group">
             <label for="Email">Email address</label>
             <input type="email" th:field="*{email}" class="form-control" id="Email" aria-describedby="emailHelp"

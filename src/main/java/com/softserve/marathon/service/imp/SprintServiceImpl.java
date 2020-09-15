@@ -1,7 +1,7 @@
 package com.softserve.marathon.service.imp;
 
 import com.softserve.marathon.exception.EntityNotFoundException;
-import com.softserve.marathon.model.Marathon;
+import com.softserve.marathon.model.Course;
 import com.softserve.marathon.model.Sprint;
 import com.softserve.marathon.model.Task;
 import com.softserve.marathon.repository.SprintRepository;
@@ -42,18 +42,18 @@ public class SprintServiceImpl implements SprintService {
     }
 
     @Override
-    public List<Sprint> getSprintsByMarathon(Long id) {
-        return sprintRepository.getSprintsByMarathonId(id);
+    public List<Sprint> getSprintsByCourse(Long id) {
+        return sprintRepository.getSprintsByCourseId(id);
     }
 
     @Override
-    public List<Sprint> getSprintByUserIdAndMarathon(Long userId, Long marathonId) {
-        return sprintRepository.getSprintByUserIdAndMarathon(userId, marathonId);
+    public List<Sprint> getSprintByUserIdAndCourse(Long userId, Long marathonId) {
+        return sprintRepository.getSprintByUserIdAndCourse(userId, marathonId);
     }
 
     @Override
-    public boolean addSprintToMarathon(Sprint sprint, Marathon marathon) {
-        sprint.setMarathon(marathon);
+    public boolean addSprintToCourse(Sprint sprint, Course course) {
+        sprint.setCourse(course);
         Sprint sprintFromDb = sprintRepository.getOne(sprint.getId());
         if (!sprintFromDb.equals(sprint)) {
             sprintRepository.save(sprint);
@@ -73,13 +73,11 @@ public class SprintServiceImpl implements SprintService {
 
     @Override
     public void createSprint(Sprint sprint) {
-        sprint.setStartDay(LocalDate.now());
         sprintRepository.save(sprint);
     }
 
     @Override
     public void finishSprint(Sprint sprint) {
-        sprint.setFinish(LocalDate.now());
         sprintRepository.save(sprint);
     }
 

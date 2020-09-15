@@ -1,7 +1,7 @@
 package com.softserve.marathon.controller;
 
-import com.softserve.marathon.service.MarathonService;
-import com.softserve.marathon.model.Marathon;
+import com.softserve.marathon.model.Course;
+import com.softserve.marathon.service.CourseService;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -18,19 +18,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class MarathonControllerTest {
+public class CourseControllerTest {
     private final MockMvc mockMvc;
-    private final MarathonService marathonService;
+    private final CourseService courseService;
 
     @Autowired
-    public MarathonControllerTest(MockMvc mockMvc, MarathonService marathonService) {
+    public CourseControllerTest(MockMvc mockMvc, CourseService courseService) {
         this.mockMvc = mockMvc;
-        this.marathonService = marathonService;
+        this.courseService = courseService;
     }
 
     @Test
     public void showAllMarathonsTest() throws Exception {
-        List<Marathon> expected = marathonService.getAll();
+        List<Course> expected = courseService.getAll();
         mockMvc.perform(MockMvcRequestBuilders.get("/marathons"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("marathons"))
@@ -42,7 +42,7 @@ public class MarathonControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/marathons/add")
                 .param("title", "marathon1"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
-        assertEquals(1, marathonService.getAll().stream()
+        assertEquals(1, courseService.getAll().stream()
                 .filter(m -> m.getTitle().equals("marathon1"))
                 .count());
     }
@@ -50,29 +50,29 @@ public class MarathonControllerTest {
     @Test
     public void closeMarathonTest() throws Exception {
         //given
-        Marathon marathon = new Marathon("marathon test");
-        marathonService.createOrUpdateMarathon(marathon);
-        assertEquals(false, marathon.isClosed());
+        Course course = new Course("marathon test");
+        courseService.createOrUpdateCourse(course);
+        assertEquals(false, course.isClosed());
         //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/marathons/delete/" + marathon.getId()));
+        mockMvc.perform(MockMvcRequestBuilders.get("/marathons/delete/" + course.getId()));
         //then
-        Marathon marathonFromDb = marathonService.getMarathonById(marathon.getId());
-        assertEquals(true, marathonFromDb.isClosed());
-        assertEquals(marathon.getTitle(), marathonFromDb.getTitle());
+        Course courseFromDb = courseService.getCourseById(course.getId());
+        assertEquals(true, courseFromDb.isClosed());
+        assertEquals(course.getTitle(), courseFromDb.getTitle());
     }
 
     @Test
     public void updateMarathonTest() throws Exception {
         //given
-        Marathon marathon = new Marathon("marathon test");
-        marathonService.createOrUpdateMarathon(marathon);
+        Course course = new Course("marathon test");
+        courseService.createOrUpdateCourse(course);
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/marathons/add")
-                .param("id", String.valueOf(marathon.getId()))
+                .param("id", String.valueOf(course.getId()))
                 .param("title", "new marathon"));
         //then
-        Marathon marathonFromDb = marathonService.getMarathonById(marathon.getId());
-        assertEquals("new marathon", marathonFromDb.getTitle());
+        Course courseFromDb = courseService.getCourseById(course.getId());
+        assertEquals("new marathon", courseFromDb.getTitle());
     }
 
     @Test
@@ -83,8 +83,8 @@ public class MarathonControllerTest {
 
     @Test
     public void updateTest() throws Exception {
-        Marathon expected = new Marathon("marathon test");
-        marathonService.createOrUpdateMarathon(expected);
+        Course expected = new Course("marathon test");
+        courseService.createOrUpdateCourse(expected);
         mockMvc.perform(MockMvcRequestBuilders.get("/marathons/edit/" + expected.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attribute("marathon", expected));

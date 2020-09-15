@@ -6,7 +6,7 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Marathon</a>
+    <a class="navbar-brand" href="#">CourseSS</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -16,8 +16,8 @@
             <li th:classappend="${#request.requestURI == '/' ? 'active':''}" class="nav-item">
                 <a class="nav-link" th:href="${'/index'}">Home</a>
             </li>
-            <li th:classappend="${#request.requestURI.startsWith('/marathons') ? 'active':''}" class="nav-item">
-                <a class="nav-link" th:href="${'/marathons'}">Marathons</a>
+            <li th:classappend="${#request.requestURI.startsWith('/courses') ? 'active':''}" class="nav-item">
+                <a class="nav-link" th:href="${'/courses'}">Courses</a>
             </li>
             <li sec:authorize="hasAnyRole('MENTOR','ADMIN')"
                 th:classappend="${#request.requestURI.startsWith('/students') ? 'active':''}" class="nav-item">

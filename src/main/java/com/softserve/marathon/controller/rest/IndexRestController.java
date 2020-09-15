@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class IndexRestController {
     @GetMapping("/api")
     public OperationResponse welcome() {
-        return new OperationResponse("Welcome to Marathon REST API.");
+        return new OperationResponse("Welcome to Course REST API.");
     }
 }
