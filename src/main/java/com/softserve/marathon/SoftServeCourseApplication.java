@@ -1,7 +1,9 @@
 package com.softserve.marathon;
 
 import com.softserve.marathon.model.Role;
+import com.softserve.marathon.model.Sprint;
 import com.softserve.marathon.repository.RoleRepository;
+import com.softserve.marathon.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

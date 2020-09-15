@@ -13,7 +13,7 @@
     <div class="container" id="action-bar">
         <div class="row align-items-center">
             <div class="col-md-2 offset-md-10 text-right">
-                <a href="/courses" class="btn btn-primary" role="button">Go To Courses</a>
+                <a th:href="@{/sprints/course/{course}/add(course=${courseId})}" class="btn btn-primary" role="button">Create Sprint</a>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
         <tr th:each="sprint : ${sprints}">
             <td th:text="${sprint.id}"></td>
             <td th:text="${sprint.title}"></td>
-            <td th:text="${sprint.startDay}"></td>
+            <td th:text="${sprint.startDate}"></td>
             <td th:text="${sprint.finish}"></td>
         </tr>
         </tbody>

@@ -1,6 +1,7 @@
 package com.softserve.marathon.model;
 
 import com.fasterxml.jackson.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,17 +16,21 @@ public class Sprint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "DATE")
-    private LocalDate finish;
-
     @Column(name = "start_date", columnDefinition = "DATE")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate startDate;
+
+    @Column(columnDefinition = "DATE")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private LocalDate finish;
 
     @NotNull
     private String title;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "course_id")
     @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
     private Course course;
@@ -56,11 +61,11 @@ public class Sprint {
         this.finish = finish;
     }
 
-    public LocalDate getStartDay() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDay(LocalDate startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 

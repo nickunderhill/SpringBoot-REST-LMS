@@ -24,6 +24,10 @@ a.badge.badge-primary {
     margin: 10px 0;
 }
 
+.container input[type=date] {
+    width: 170px;
+}
+
 #action-bar .col {
     margin: 0;
     padding: 0;

@@ -63,7 +63,6 @@ public class Course {
         this.title = title;
     }
 
-
     public List<Sprint> getSprints() {
         return sprints;
     }

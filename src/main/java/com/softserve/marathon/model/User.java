@@ -38,10 +38,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinColumn(name = "id_role")
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="role")
-    @JsonIdentityReference(alwaysAsId=true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "role")
+    @JsonIdentityReference(alwaysAsId = true)
     private Role role;
 
     @Transient
@@ -52,8 +52,8 @@ public class User {
     private boolean active;
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private List<Course> courses = new ArrayList<>();
 
     public List<Progress> getProgresses() {
