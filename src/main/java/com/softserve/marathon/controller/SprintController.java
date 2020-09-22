@@ -1,5 +1,7 @@
 package com.softserve.marathon.controller;
 
+import com.softserve.marathon.exception.EntityNotFoundException;
+import com.softserve.marathon.model.Course;
 import com.softserve.marathon.model.Sprint;
 import com.softserve.marathon.repository.CourseRepository;
 import com.softserve.marathon.repository.UserRepository;
@@ -36,11 +38,11 @@ public class SprintController {
         String userEmail = request.getUserPrincipal().getName();
         Long studentId = userRepository.getUserByEmail(userEmail).getId();
         List<Sprint> sprints;
-        if (request.isUserInRole("ROLE_STUDENT")) {
+        /*if (request.isUserInRole("ROLE_STUDENT")) {
             sprints = sprintService.getSprintByUserIdAndCourse(studentId, courseId);
-        } else {
+        } else {*/
             sprints = sprintService.getSprintsByCourse(courseId);
-        }
+        //}
         model.addAttribute("sprints", sprints);
         logger.info("Rendering sprint/list.html view");
         return "sprint/list";
@@ -58,12 +60,45 @@ public class SprintController {
                                @Valid @ModelAttribute Sprint sprint,
                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            logger.error("Error(s) creating sprint" + bindingResult.getAllErrors());
+            logger.error("Error(s) creating sprint: " + bindingResult.getAllErrors());
             return "sprint/create";
         }
         logger.info("Creating new sprint");
         sprint.setCourse(courseRepository.getOne(courseId));
         sprintService.createSprint(sprint);
+        return "redirect:/sprints/course/" + courseId;
+    }
+
+    @GetMapping("/course/{courseId}/edit/{id}")
+    public String editSpring(@PathVariable Long courseId,  @PathVariable Long id, Model model) {
+        logger.info("Rendering sprint/edit.html view");
+        model.addAttribute("sprint", sprintService.getSprintById(id));
+        return "sprint/edit";
+    }
+
+    @PostMapping("/course/{courseId}/edit/{id}")
+    public String editSpring(@PathVariable Long courseId,
+                             @PathVariable Long id,
+                             @Valid @ModelAttribute Sprint sprint,
+                             BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.error("Error(s) editing sprint: " + bindingResult.getAllErrors());
+            return "sprint/edit";
+        }
+        logger.info("Editing sprint " + sprint.getId());
+        sprintService.updateSprint(sprint);
+        return "redirect:/sprints/course/" + courseId;
+    }
+
+    @GetMapping("/course/{courseId}/delete/{id}")
+    public String close(@PathVariable Long courseId, @PathVariable Long id) {
+        logger.info("Delete sprint " + id);
+        try {
+            sprintService.delete(id);
+        } catch (EntityNotFoundException e) {
+            logger.error("Exception: " + e);
+            e.printStackTrace();
+        }
         return "redirect:/sprints/course/" + courseId;
     }
 

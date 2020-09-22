@@ -1,6 +1,7 @@
 package com.softserve.marathon.model;
 
 import com.fasterxml.jackson.annotation.*;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -27,9 +28,10 @@ public class Sprint {
     private LocalDate finish;
 
     @NotNull
+    @Length(min = 3, max = 60)
     private String title;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "course_id")
     @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)

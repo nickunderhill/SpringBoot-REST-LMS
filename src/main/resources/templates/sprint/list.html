@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="fragments/header :: common_header(~{::title})">
     <title th:text="'Course #' + ${courseId} + ' Sprint List'"></title>
@@ -13,7 +14,7 @@
     <div class="container" id="action-bar">
         <div class="row align-items-center">
             <div class="col-md-2 offset-md-10 text-right">
-                <a th:href="@{/sprints/course/{course}/add(course=${courseId})}" class="btn btn-primary" role="button">Create Sprint</a>
+                <a sec:authorize="hasAnyRole('MENTOR','ADMIN')" th:href="@{/sprints/course/{course}/add(course=${courseId})}" class="btn btn-primary" role="button">Create Sprint</a>
             </div>
         </div>
     </div>
@@ -25,6 +26,7 @@
             <th scope="col">Title</th>
             <th scope="col">Start date</th>
             <th scope="col">Close date</th>
+            <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -33,6 +35,11 @@
             <td th:text="${sprint.title}"></td>
             <td th:text="${sprint.startDate}"></td>
             <td th:text="${sprint.finish}"></td>
+            <td>
+                <a th:href="${'/tasks/sprint/' + sprint.id}" class="btn btn-info" role="button">Tasks</a>
+                <a sec:authorize="hasAnyRole('MENTOR','ADMIN')" th:href="@{/sprints/course/{course}/edit/{sprint}(course=${courseId}, sprint=${sprint.id})}" class="btn btn-warning" role="button">Edit</a>
+                <a sec:authorize="hasAnyRole('MENTOR','ADMIN')" th:href="@{/sprints/course/{course}/delete/{sprint}(course=${courseId}, sprint=${sprint.id})}" class="btn btn-danger" role="button">Delete</a>
+            </td>
         </tr>
         </tbody>
     </table>

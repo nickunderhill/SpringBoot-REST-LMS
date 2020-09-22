@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: common_header(~{::title})">
+    <title th:text="'Edit Sprint ' + ${id}"></title>
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: nav"></div>
+
+<div class="container">
+    <div class="container" id="action-bar">
+        <div class="row align-items-center">
+            <div class="col-md-2 offset-md-10 text-right">
+                <a th:href="'/sprints/course/' + ${courseId}" class="btn btn-primary" role="button">Back to Sprint List</a>
+            </div>
+        </div>
+    </div>
+    <h2 th:text="'Edit Sprint ' + ${id}"></h2>
+    <form th:action="@{/sprints/course/{course}/add(course=${courseId})}" th:object="${sprint}" method="post">
+        <input type="hidden" th:field="*{id}" id="Id">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" th:value="*{title}" th:field="*{title}" class="form-control" id="title" placeholder="Enter Name">
+            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="validation-error"></div>
+        </div>
+        <div class="form-group">
+            <label for="start-date">Start Date</label>
+            <input type="date" th:value="*{startDate}" th:field="*{startDate}" class="form-control" id="start-date">
+            <div th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}" class="validation-error"></div>
+        </div>
+        <div class="form-group">
+            <label for="finish">Finish Date</label>
+            <input type="date" th:value="${'finish'}" th:field="*{finish}" class="form-control" id="finish">
+            <div th:if="${#fields.hasErrors('finish')}" th:errors="*{finish}" class="validation-error"></div>
+        </div>
+        <button type="submit" class="btn btn-primary" value="Submit">Submit</button>
+        <button type="reset" class="btn btn-secondary" value="Reset">Cancel</button>
+    </form>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
